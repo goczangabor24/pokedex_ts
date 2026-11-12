@@ -1,14 +1,7 @@
-import { createInterface } from "node:readline";
-import { CLICommand, getCommands } from "./commands.js";
+import type { State } from "./state.js";
 
-export function startREPL() {
-    const rl = createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        prompt: "Pokedex > ",
-    });
-
-    const commands = getCommands();
+export function startREPL(state: State) {
+    const rl = state.rl;
 
     rl.prompt();
 
@@ -20,13 +13,13 @@ export function startREPL() {
             return;
         }
 
-        const command = commands[words[0]];
+        const command = state.commands[words[0]];
 
         if (!command) {
             console.log("Unknown command");
         } else {
             try {
-                command.callback(commands);
+                command.callback(state);
             } catch (error) {
                 console.log(error);
             }
